@@ -33,4 +33,7 @@ public record ProductDto(
                 .category(productDto.category)
                 .build();
     }
+    public static List<Product> toModelList(List<ProductDto> productDtoList){
+        return productDtoList.stream().map(ProductDto::toModel).toList();
+    }
 }

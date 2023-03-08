@@ -1,7 +1,6 @@
 package com.luinwee.restaurant.controller;
 
 import com.luinwee.restaurant.dto.ProductDto;
-import com.luinwee.restaurant.model.Product;
 import com.luinwee.restaurant.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +15,12 @@ public class ProductController {
         this.service = service;
     }
     @GetMapping
-    public List<ProductDto> productDtoList(){
-        return service.productDtoList();
+    public List<ProductDto> getProductList(){
+        return service.getProductList();
     }
-    @GetMapping("{productId}")
-    public ProductDto productDto(@PathVariable Long productId){
-        return service.productDto(productId);
+    @GetMapping("/{productId}")
+    public ProductDto getProduct(@PathVariable Long productId){
+        return service.getProduct(productId);
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -32,9 +31,9 @@ public class ProductController {
     public ProductDto updateProduct(@RequestBody ProductDto productDto){
         return service.updateProduct(productDto);
     }
-    @DeleteMapping()
+    @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProduct(Long productId){
+    public void deleteProduct(@PathVariable Long productId){
         service.deleteProduct(productId);
     }
 }

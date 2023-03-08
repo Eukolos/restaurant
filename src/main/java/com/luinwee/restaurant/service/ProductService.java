@@ -15,10 +15,10 @@ public class ProductService {
         this.repository = repository;
     }
 
-    public List<ProductDto> productDtoList(){
+    public List<ProductDto> getProductList(){
         return ProductDto.toDtoList(repository.findAll());
     }
-    public ProductDto productDto(Long productId){
+    public ProductDto getProduct(Long productId){
         return ProductDto.toDto(repository.findById(productId).orElseThrow(null));
     }
     public ProductDto createProduct(ProductDto productDto){
