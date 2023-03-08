@@ -8,7 +8,7 @@ import java.util.List;
 public record AccountDto(
         Long id,
         float totalPrice,
-        List<ProductDto> products,
+        List<OrderDto> orders,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -16,7 +16,7 @@ public record AccountDto(
         return new AccountDto(
                 account.getId(),
                 account.getTotalPrice(),
-                ProductDto.toDtoList(account.getProducts()),
+                OrderDto.toDtoList(account.getOrders()),
                 account.getCreatedAt(),
                 account.getUpdatedAt()
         );
@@ -30,7 +30,7 @@ public record AccountDto(
         return Account.builder()
                 .id(accountDto.id)
                 .totalPrice(accountDto.totalPrice)
-                .products(ProductDto.toModelList(accountDto.products))
+                .orders(OrderDto.toModelList(accountDto.orders))
                 .createdAt(accountDto.createdAt)
                 .updatedAt(accountDto.updatedAt)
                 .build();

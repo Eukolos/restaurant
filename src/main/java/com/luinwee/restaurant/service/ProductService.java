@@ -21,6 +21,9 @@ public class ProductService {
     public ProductDto getProduct(Long productId){
         return ProductDto.toDto(repository.findById(productId).orElseThrow(null));
     }
+    protected Product product(Long productId){
+        return repository.findById(productId).orElseThrow(null);
+    }
     public ProductDto createProduct(ProductDto productDto){
         return ProductDto.toDto(repository.save(ProductDto.toModel(productDto)));
     }

@@ -1,14 +1,16 @@
 package com.luinwee.restaurant.service;
 
 import com.luinwee.restaurant.dto.AccountDto;
-import com.luinwee.restaurant.dto.ProductDto;
+import com.luinwee.restaurant.dto.OrderDto;
 import com.luinwee.restaurant.model.Account;
 import com.luinwee.restaurant.repository.AccountRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class AccountService {
     private final AccountRepository repository;
 
@@ -27,6 +29,9 @@ public class AccountService {
     public AccountDto createAccount(AccountDto accountDto) {
         return AccountDto.toDto(repository.save(AccountDto.toModel(accountDto)));
     }
+    protected Account produceAccount(Account account) {
+        return repository.save(account);
+    }
 
     public AccountDto updateAccount(AccountDto accountDto) {
         Account account = repository.findById(accountDto.id()).orElseThrow();
@@ -34,7 +39,7 @@ public class AccountService {
                 new Account(
                         account.getId(),
                         accountDto.totalPrice(),
-                        ProductDto.toModelList(accountDto.products()),
+                        OrderDto.toModelList(accountDto.orders()),
                         accountDto.createdAt(),
                         accountDto.updatedAt()
                 )

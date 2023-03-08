@@ -19,7 +19,7 @@ public class Account {
     private Long id;
     private float totalPrice;
     @OneToMany
-    private List<Product> products;
+    private List<Order> orders;
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;

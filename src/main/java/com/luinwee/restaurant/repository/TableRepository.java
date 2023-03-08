@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface TableRepository extends JpaRepository<Table, Integer> {
     Optional<List<Table>> findByIsAvailable(boolean isAvailable);
+    Optional<Table> findByIdAndIsAvailable(Integer tableId, boolean isAvailable);
 }

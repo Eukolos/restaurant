@@ -11,13 +11,13 @@ import java.util.List;
 public record TableDto(
         Integer id,
         List<AccountDto> accounts,
-        boolean isAvailable
+        Boolean isAvailable
 )  {
     public static TableDto toDto(Table table){
         return new TableDto(
                 table.getId(),
                 AccountDto.toDtoList(table.getAccounts()),
-                table.isAvailable()
+                table.getIsAvailable()
         );
     }
     public static List<TableDto> toDtoList(List<Table> tableList){
