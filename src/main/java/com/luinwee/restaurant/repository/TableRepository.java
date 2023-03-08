@@ -2,6 +2,12 @@ package com.luinwee.restaurant.repository;
 
 import com.luinwee.restaurant.model.Table;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface TableRepository extends JpaRepository<Table, Long> {
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface TableRepository extends JpaRepository<Table, Integer> {
+    Optional<List<Table>> findByIsAvailable(boolean isAvailable);
 }

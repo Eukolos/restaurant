@@ -16,9 +16,9 @@ import java.util.List;
 public class Table {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    private Integer id;
     @OneToMany
     private List<Account> accounts;
-    private boolean isActive;
+    private Boolean isAvailable;
 
 }

@@ -6,10 +6,7 @@ import com.luinwee.restaurant.repository.ProductRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 @Component
 public class ProductSeed implements CommandLineRunner {
@@ -20,7 +17,7 @@ public class ProductSeed implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         Product p1 = Product.builder()
                 .name("Kebap")
                 .price(80)
@@ -111,6 +108,6 @@ public class ProductSeed implements CommandLineRunner {
                 .cost(15)
                 .category(Category.BEVERAGE)
                 .build();
-        repository.saveAll(Arrays.asList(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15));
+        repository.saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15));
     }
 }
