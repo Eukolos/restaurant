@@ -26,10 +26,10 @@ public class AccountService {
         return AccountDto.toDtoList(repository.findAll());
     }
 
-    public AccountDto createAccount(AccountDto accountDto) {
-        return AccountDto.toDto(repository.save(AccountDto.toModel(accountDto)));
-    }
-    protected Account produceAccount(Account account) {
+//    public AccountDto createAccount(AccountDto accountDto) {
+//        return AccountDto.toDto(repository.save(AccountDto.toModel(accountDto)));
+//    }
+    public Account produceAccount(Account account) {
         return repository.save(account);
     }
 
@@ -39,6 +39,7 @@ public class AccountService {
                 new Account(
                         account.getId(),
                         accountDto.totalPrice(),
+                        accountDto.isActive(),
                         OrderDto.toModelList(accountDto.orders()),
                         accountDto.createdAt(),
                         accountDto.updatedAt()

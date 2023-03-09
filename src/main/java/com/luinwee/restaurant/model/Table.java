@@ -15,10 +15,13 @@ import java.util.List;
 @Builder
 public class Table {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Account> accounts;
     private Boolean isAvailable;
 
+    public Table(Boolean isAvailable) {
+        this.isAvailable = isAvailable;
+    }
 }

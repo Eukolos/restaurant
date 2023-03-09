@@ -15,14 +15,27 @@ import java.util.List;
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private float totalPrice;
-    @OneToMany
+    private boolean isActive;
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Order> orders;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "table_id")
+    private Table table;
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public Account(Long id, float totalPrice, boolean isActive, List<Order> orders, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.totalPrice = totalPrice;
+        this.isActive = isActive;
+        this.orders = orders;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

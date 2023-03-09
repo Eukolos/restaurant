@@ -1,11 +1,9 @@
 package com.luinwee.restaurant.controller;
 
+import com.luinwee.restaurant.dto.ProductRequest;
 import com.luinwee.restaurant.dto.TableDto;
 import com.luinwee.restaurant.service.TableService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,17 +17,22 @@ public class TableController {
     }
 
     @GetMapping
-    public List<TableDto> getTableList(){
+    public List<TableDto> getTableList() {
         return service.getTableList();
     }
+
     @GetMapping("/available")
-    public List<TableDto> getAvailableTableList(){
+    public List<TableDto> getAvailableTableList() {
         return service.getAvailableTableList();
     }
+
     @GetMapping("/{tableId}")
-    public TableDto getTable (@PathVariable int tableId) {
+    public TableDto getTable(@PathVariable int tableId) {
         return service.getTable(tableId);
     }
 
-
+    @PostMapping("/{tableId}")
+    public TableDto tableTakenOrder(@PathVariable int tableId,@RequestBody List<ProductRequest> productRequests){
+        return service.tableTakenOrder(tableId, productRequests);
+    }
 }

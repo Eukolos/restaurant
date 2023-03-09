@@ -8,6 +8,7 @@ import java.util.List;
 public record AccountDto(
         Long id,
         float totalPrice,
+        boolean isActive,
         List<OrderDto> orders,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
@@ -16,6 +17,7 @@ public record AccountDto(
         return new AccountDto(
                 account.getId(),
                 account.getTotalPrice(),
+                account.isActive(),
                 OrderDto.toDtoList(account.getOrders()),
                 account.getCreatedAt(),
                 account.getUpdatedAt()
@@ -30,6 +32,7 @@ public record AccountDto(
         return Account.builder()
                 .id(accountDto.id)
                 .totalPrice(accountDto.totalPrice)
+                .isActive(accountDto.isActive)
                 .orders(OrderDto.toModelList(accountDto.orders))
                 .createdAt(accountDto.createdAt)
                 .updatedAt(accountDto.updatedAt)

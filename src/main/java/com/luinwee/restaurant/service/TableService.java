@@ -7,7 +7,10 @@ import com.luinwee.restaurant.model.Account;
 import com.luinwee.restaurant.model.Order;
 import com.luinwee.restaurant.model.Table;
 import com.luinwee.restaurant.repository.TableRepository;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,11 +37,11 @@ public class TableService {
     }
 
     public TableDto getTable(int tableId) {
-        return TableDto.toDto(new Table());
+        return TableDto.toDto(repository.findById(tableId).orElseThrow());
     }
 
     public TableDto tableTakenOrder(Integer tableId, List<ProductRequest> productRequests){
-        Table table = repository.findByIdAndIsAvailable(tableId, true).orElseThrow();
+        Table table = repository.findByIdAndIsAvailable(tableId, false).orElseThrow();
         List<Order> orderList = productRequests.stream().map(
                 productRequest -> {
             Order order = OrderDto.productToOrder(productService.product(productRequest.productId()));
@@ -48,13 +51,17 @@ public class TableService {
         List<Order> savedOrders = orderService.createOrders(orderList);
         Account account = accountService.produceAccount(
                 Account.builder()
+                        .totalPrice(0)
+                        .isActive(true)
                         .orders(savedOrders)
+                        .table(table)
                         .build()
         );
         List<Account> accounts = table.getAccounts();
         accounts.add(account);
         return TableDto.toDto(repository.save(
                 Table.builder()
+                        .id(table.getId())
                         .accounts(accounts)
                         .isAvailable(false)
                         .build()
