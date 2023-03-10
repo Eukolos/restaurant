@@ -19,23 +19,16 @@ public class Account {
     private Long id;
     private float totalPrice;
     private boolean isActive;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Order> orders;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "table_id")
     private Table table;
-    @Column(updatable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 
-    public Account(Long id, float totalPrice, boolean isActive, List<Order> orders, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Account(Long id, float totalPrice, boolean isActive, List<Order> orders) {
         this.id = id;
         this.totalPrice = totalPrice;
         this.isActive = isActive;
         this.orders = orders;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 }

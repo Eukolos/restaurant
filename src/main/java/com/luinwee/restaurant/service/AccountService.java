@@ -40,9 +40,7 @@ public class AccountService {
                         account.getId(),
                         accountDto.totalPrice(),
                         accountDto.isActive(),
-                        OrderDto.toModelList(accountDto.orders()),
-                        accountDto.createdAt(),
-                        accountDto.updatedAt()
+                        OrderDto.toModelList(accountDto.orders())
                 )
         ));
     }

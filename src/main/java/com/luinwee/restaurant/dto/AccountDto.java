@@ -9,18 +9,14 @@ public record AccountDto(
         Long id,
         float totalPrice,
         boolean isActive,
-        List<OrderDto> orders,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        List<OrderDto> orders
 ) {
     public static AccountDto toDto(Account account) {
         return new AccountDto(
                 account.getId(),
                 account.getTotalPrice(),
                 account.isActive(),
-                OrderDto.toDtoList(account.getOrders()),
-                account.getCreatedAt(),
-                account.getUpdatedAt()
+                OrderDto.toDtoList(account.getOrders())
         );
     }
 
@@ -34,8 +30,6 @@ public record AccountDto(
                 .totalPrice(accountDto.totalPrice)
                 .isActive(accountDto.isActive)
                 .orders(OrderDto.toModelList(accountDto.orders))
-                .createdAt(accountDto.createdAt)
-                .updatedAt(accountDto.updatedAt)
                 .build();
     }
 

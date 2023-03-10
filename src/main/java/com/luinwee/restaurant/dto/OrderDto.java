@@ -43,7 +43,6 @@ public record OrderDto(
 
     public static Order productToOrder(Product product){
         return Order.builder()
-                .id(product.getId())
                 .name(product.getName())
                 .amount(0)
                 .price(product.getPrice())

@@ -7,14 +7,13 @@ import com.luinwee.restaurant.model.Account;
 import com.luinwee.restaurant.model.Order;
 import com.luinwee.restaurant.model.Table;
 import com.luinwee.restaurant.repository.TableRepository;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class TableService {
     private final TableRepository repository;
     private final ProductService productService;
@@ -41,16 +40,20 @@ public class TableService {
     }
 
     public TableDto tableTakenOrder(Integer tableId, List<ProductRequest> productRequests){
-        Table table = repository.findByIdAndIsAvailable(tableId, false).orElseThrow();
+        Table table = repository.findByIdAndIsAvailable(tableId, true).orElseThrow();
+        Account account = accountService.produceAccount(new Account());
         List<Order> orderList = productRequests.stream().map(
                 productRequest -> {
             Order order = OrderDto.productToOrder(productService.product(productRequest.productId()));
+            order.setAccount(account);
             order.setAmount(productRequest.amount());
             return order;
         }).toList();
+
         List<Order> savedOrders = orderService.createOrders(orderList);
-        Account account = accountService.produceAccount(
+        Account account2 = accountService.produceAccount(
                 Account.builder()
+                        .id(account.getId())
                         .totalPrice(0)
                         .isActive(true)
                         .orders(savedOrders)
@@ -58,7 +61,7 @@ public class TableService {
                         .build()
         );
         List<Account> accounts = table.getAccounts();
-        accounts.add(account);
+        accounts.add(account2);
         return TableDto.toDto(repository.save(
                 Table.builder()
                         .id(table.getId())
