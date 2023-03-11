@@ -18,7 +18,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private float totalPrice;
-    private boolean isActive;
+    private Boolean isActive;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Order> orders;
     @ManyToOne(fetch = FetchType.LAZY)

@@ -15,7 +15,7 @@ public record AccountDto(
         return new AccountDto(
                 account.getId(),
                 account.getTotalPrice(),
-                account.isActive(),
+                account.getIsActive(),
                 OrderDto.toDtoList(account.getOrders())
         );
     }

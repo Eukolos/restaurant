@@ -32,7 +32,18 @@ public class TableController {
     }
 
     @PostMapping("/{tableId}")
-    public TableDto tableTakenOrder(@PathVariable int tableId,@RequestBody List<ProductRequest> productRequests){
+    public TableDto tableTakenOrder(
+            @PathVariable int tableId,
+            @RequestBody List<ProductRequest> productRequests
+    ){
         return service.tableTakenOrder(tableId, productRequests);
     }
+    @PutMapping("/{tableId}")
+    public TableDto tableUpdateOrder(
+            @PathVariable int tableId,
+            @RequestBody List<ProductRequest> productRequests
+    ){
+        return service.tableUpdateOrder(tableId, productRequests);
+    }
+
 }

@@ -35,7 +35,7 @@ public class TableSeed implements CommandLineRunner {
                 1L,
                 2
         );
-        TableDto tableDto = service.tableTakenOrder(1, List.of(p1));
-        log.info(tableDto.toString());
+      //  TableDto tableDto = service.tableTakenOrder(1, List.of(p1));
+      //  log.info(tableDto.toString());
     }
 }

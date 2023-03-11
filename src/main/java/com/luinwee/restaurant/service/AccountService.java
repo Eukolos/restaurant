@@ -33,16 +33,16 @@ public class AccountService {
         return repository.save(account);
     }
 
-    public AccountDto updateAccount(AccountDto accountDto) {
-        Account account = repository.findById(accountDto.id()).orElseThrow();
-        return AccountDto.toDto(repository.save(
+    public Account updateAccount(Account account) {
+        Account accountFromRepo = repository.findById(account.getId()).orElseThrow();
+        return repository.save(
                 new Account(
-                        account.getId(),
-                        accountDto.totalPrice(),
-                        accountDto.isActive(),
-                        OrderDto.toModelList(accountDto.orders())
+                        accountFromRepo.getId(),
+                        account.getTotalPrice(),
+                        account.getIsActive(),
+                        account.getOrders()
                 )
-        ));
+        );
     }
 
     public void deleteAccount(Long accountId){
