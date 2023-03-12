@@ -2,6 +2,7 @@ package com.luinwee.restaurant.service;
 
 import com.luinwee.restaurant.dto.OrderDto;
 import com.luinwee.restaurant.dto.ProductRequest;
+import com.luinwee.restaurant.model.Account;
 import com.luinwee.restaurant.model.Order;
 import com.luinwee.restaurant.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -12,10 +13,12 @@ import java.util.List;
 public class OrderService {
     private final OrderRepository repository;
     private final ProductService productService;
+    private final AccountService accountService;
 
-    public OrderService(OrderRepository repository, ProductService productService) {
+    public OrderService(OrderRepository repository, ProductService productService, AccountService accountService) {
         this.repository = repository;
         this.productService = productService;
+        this.accountService = accountService;
     }
 
     public List<OrderDto> getOrderList(){
@@ -43,16 +46,18 @@ public class OrderService {
                 )
         ));
     }
-    public List<Order> saveProductsAsOrders(List<ProductRequest> productRequests){
+    public List<Order> saveProductsAsOrders(List<ProductRequest> productRequests, Account account){
         List<Order> orderList = productRequests.stream().map(
                 productRequest -> {
                     Order order = OrderDto.productToOrder(productService.product(productRequest.productId()));
                     order.setAmount(productRequest.amount());
+                    order.setAccount(account);
                     return order;
                 }).toList();
         return repository.saveAll(orderList);
     }
     public void deleteOrder(Long orderId){
-        repository.deleteById(orderId);
+        Order byId = repository.findById(orderId).orElseThrow();
+        repository.deleteById(byId.getId());
     }
 }

@@ -45,5 +45,9 @@ public class TableController {
     ){
         return service.tableUpdateOrder(tableId, productRequests);
     }
+    @DeleteMapping("/{tableId}")
+    public void accountInactiveInTable(@PathVariable int tableId){
+        service.accountInactiveInTable(tableId);
+    }
 
 }

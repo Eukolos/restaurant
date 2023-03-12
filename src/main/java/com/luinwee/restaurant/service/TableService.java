@@ -37,11 +37,13 @@ public class TableService {
     public TableDto tableTakenOrder(Integer tableId, List<ProductRequest> productRequests){
 
         Table table = repository.findByIdAndIsAvailable(tableId, true).orElseThrow();
+        Account newAccount = accountService.produceAccount(new Account());
 
-        List<Order> savedOrders = orderService.saveProductsAsOrders(productRequests);
+        List<Order> savedOrders = orderService.saveProductsAsOrders(productRequests, newAccount);
 
         Account account = accountService.produceAccount(
                 Account.builder()
+                        .id(newAccount.getId())
                         .totalPrice(getTotalPrice(savedOrders))
                         .isActive(true)
                         .orders(savedOrders)
@@ -61,10 +63,10 @@ public class TableService {
 
     public TableDto tableUpdateOrder (Integer tableId, List<ProductRequest> productRequests){
         Table table = repository.findByIdAndIsAvailable(tableId, false).orElseThrow();
-        List<Order> savedOrders = orderService.saveProductsAsOrders(productRequests);
         Account account = table.getAccounts().stream()
                 .filter(x -> x.getIsActive().equals(true))
                 .findFirst().orElseThrow();
+        List<Order> savedOrders = orderService.saveProductsAsOrders(productRequests, account);
         List<Order> OrderList = account.getOrders();
         OrderList.addAll(savedOrders);
         accountService.updateAccount(Account.builder()
@@ -83,5 +85,26 @@ public class TableService {
             totalPrice = totalPrice + (savedOrder.getAmount() * savedOrder.getPrice());
         }
         return totalPrice;
+    }
+
+    public void accountInactiveInTable(int tableId) {
+        Table table = repository.findByIdAndIsAvailable(tableId, false).orElseThrow();
+        Account account = table.getAccounts().stream()
+                .filter(x -> x.getIsActive().equals(true))
+                .findFirst().orElseThrow();
+        accountService.updateAccount(Account.builder()
+                .id(account.getId())
+                .totalPrice(account.getTotalPrice())
+                .isActive(false)
+                .orders(account.getOrders())
+                .table(account.getTable())
+                .build());
+        repository.save(
+                new Table(
+                        table.getId(),
+                        table.getAccounts(),
+                        true
+                )
+        );
     }
 }

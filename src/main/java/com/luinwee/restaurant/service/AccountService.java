@@ -18,8 +18,8 @@ public class AccountService {
         this.repository = repository;
     }
 
-    public AccountDto getAccount(Long accountId) {
-        return AccountDto.toDto(repository.findById(accountId).orElseThrow());
+    public Account getAccount(Long accountId) {
+        return repository.findById(accountId).orElseThrow();
     }
 
     public List<AccountDto> getAccountList() {
