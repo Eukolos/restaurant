@@ -1,10 +1,7 @@
 package com.luinwee.restaurant.dto;
 
-import com.luinwee.restaurant.dto.AccountDto;
-import com.luinwee.restaurant.model.Table;
 import com.luinwee.restaurant.model.Table;
 
-import java.io.Serializable;
 import java.util.List;
 
 

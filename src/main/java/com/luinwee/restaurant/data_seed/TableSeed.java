@@ -27,7 +27,7 @@ public class TableSeed implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 20; i++) {
             Table table = new Table(true);
             repository.save(table);
         }

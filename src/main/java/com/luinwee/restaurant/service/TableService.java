@@ -2,6 +2,7 @@ package com.luinwee.restaurant.service;
 
 import com.luinwee.restaurant.dto.ProductRequest;
 import com.luinwee.restaurant.dto.TableDto;
+import com.luinwee.restaurant.dto.TableStatusResponse;
 import com.luinwee.restaurant.model.Account;
 import com.luinwee.restaurant.model.Order;
 import com.luinwee.restaurant.model.Table;
@@ -9,6 +10,7 @@ import com.luinwee.restaurant.repository.TableRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TableService {
@@ -30,38 +32,63 @@ public class TableService {
         return TableDto.toDtoList(repository.findByIsAvailable(true).orElseThrow());
     }
 
+    public List<TableStatusResponse> getTableStatusList() {
+        return TableStatusResponse.toDtoList(repository.findAll());
+    }
+
     public TableDto getTable(int tableId) {
         return TableDto.toDto(repository.findById(tableId).orElseThrow());
     }
 
-    public TableDto tableTakenOrder(Integer tableId, List<ProductRequest> productRequests){
+    public TableDto tableTakenOrder(Integer tableId, List<ProductRequest> productRequests) {
 
-        Table table = repository.findByIdAndIsAvailable(tableId, true).orElseThrow();
-        Account newAccount = accountService.produceAccount(new Account());
+        Table table = repository.findById(tableId).orElseThrow();
+        if (table.getIsAvailable()) {
+            Account newAccount = accountService.produceAccount(new Account());
 
-        List<Order> savedOrders = orderService.saveProductsAsOrders(productRequests, newAccount);
+            List<Order> savedOrders = orderService.saveProductsAsOrders(productRequests, newAccount);
 
-        Account account = accountService.produceAccount(
-                Account.builder()
-                        .id(newAccount.getId())
-                        .totalPrice(getTotalPrice(savedOrders))
-                        .isActive(true)
-                        .orders(savedOrders)
-                        .table(table)
-                        .build()
-        );
-        List<Account> accounts = table.getAccounts();
-        accounts.add(account);
-        return TableDto.toDto(repository.save(
-                Table.builder()
-                        .id(table.getId())
-                        .accounts(accounts)
-                        .isAvailable(false)
-                        .build()
-        ));
+            Account account = accountService.produceAccount(
+                    Account.builder()
+                            .id(newAccount.getId())
+                            .totalPrice(getTotalPrice(savedOrders))
+                            .isActive(true)
+                            .orders(savedOrders)
+                            .table(table)
+                            .build()
+            );
+            List<Account> accounts = table.getAccounts();
+            accounts.add(account);
+            return TableDto.toDto(repository.save(
+                    Table.builder()
+                            .id(table.getId())
+                            .accounts(accounts)
+                            .isAvailable(false)
+                            .build()
+            ));
+        }
+        Account activeAccount = table.getAccounts().stream()
+                .filter(x -> x.getIsActive().equals(true))
+                .findFirst().orElseThrow();
+
+        List<Order> savedOrders = orderService.saveProductsAsOrders(productRequests, activeAccount);
+        List<Order> OrderList = activeAccount.getOrders();
+        OrderList.addAll(savedOrders);
+        accountService.updateAccount(Account.builder()
+                .id(activeAccount.getId())
+                .totalPrice(getTotalPrice(OrderList))
+                .isActive(activeAccount.getIsActive())
+                .orders(OrderList)
+                .table(activeAccount.getTable())
+                .build());
+
+
+        return TableDto.toDto(repository.findById(tableId).orElseThrow());
+
+
     }
 
-    public TableDto tableUpdateOrder (Integer tableId, List<ProductRequest> productRequests){
+    public TableDto tableUpdateOrder(Integer tableId, List<ProductRequest> productRequests) {
         Table table = repository.findByIdAndIsAvailable(tableId, false).orElseThrow();
         Account account = table.getAccounts().stream()
                 .filter(x -> x.getIsActive().equals(true))

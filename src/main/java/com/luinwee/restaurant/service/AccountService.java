@@ -33,6 +33,19 @@ public class AccountService {
         return repository.save(account);
     }
 
+    public AccountDto getAccountByTableIdAndIsActive(Long tableId, boolean isActive){
+        Account account = repository.findAccountByTableIdAndIsActive(tableId, isActive).orElse(new Account());
+        if (account.getId() == null) {
+            return new AccountDto(
+                    0L,
+                    0,
+                    false,
+                    List.of()
+            );
+        }
+        return AccountDto.toDto(account);
+    }
+
     public Account updateAccount(Account account) {
         Account accountFromRepo = repository.findById(account.getId()).orElseThrow();
         return repository.save(
@@ -40,7 +53,8 @@ public class AccountService {
                         accountFromRepo.getId(),
                         account.getTotalPrice(),
                         account.getIsActive(),
-                        account.getOrders()
+                        account.getOrders(),
+                        account.getTable()
                 )
         );
     }
