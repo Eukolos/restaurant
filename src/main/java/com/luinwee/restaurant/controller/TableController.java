@@ -70,6 +70,11 @@ public class TableController {
         service.accountInactiveInTable(tableId);
     }
 
+    @PutMapping("/qua/{quantity}")
+    public void updateQuantity(@PathVariable int quantity){
+        service.tableIncreaseOrDecrease(quantity);
+    }
+
 
 
 }

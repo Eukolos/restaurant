@@ -130,8 +130,25 @@ public class TableService {
                 new Table(
                         table.getId(),
                         table.getAccounts(),
-                        true
+                        true,
+                        ""
                 )
         );
+    }
+
+    public void tableIncreaseOrDecrease(int tableQuantity) {
+        int tableCount = repository.findAll().size();
+        if (tableQuantity > tableCount) {
+            for (int i = 0; i < tableQuantity - tableCount; i++) {
+                repository.save(new Table(true));
+            }
+        } else if (tableQuantity < tableCount) {
+            List<Table> tables = repository.findAll();
+            int tablesToDelete = tableCount - tableQuantity;
+            for (int i = tables.size() - 1; i >= tables.size() - tablesToDelete; i--) {
+                repository.delete(tables.get(i));
+            }
+        }
+
     }
 }

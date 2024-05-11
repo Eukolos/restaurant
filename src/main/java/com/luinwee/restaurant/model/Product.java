@@ -18,5 +18,6 @@ public class Product {
     private float cost;
     @Enumerated(EnumType.STRING)
     private Category category;
+    private int quantity;
 
 }

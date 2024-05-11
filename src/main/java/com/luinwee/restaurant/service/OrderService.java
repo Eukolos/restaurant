@@ -49,7 +49,7 @@ public class OrderService {
     public List<Order> saveProductsAsOrders(List<ProductRequest> productRequests, Account account){
         List<Order> orderList = productRequests.stream().map(
                 productRequest -> {
-                    Order order = OrderDto.productToOrder(productService.product(productRequest.productId()));
+                    Order order = OrderDto.productToOrder(productService.product(productRequest));
                     order.setAmount(productRequest.amount());
                     order.setAccount(account);
                     return order;

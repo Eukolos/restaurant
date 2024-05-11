@@ -1,5 +1,6 @@
 package com.luinwee.restaurant.controller;
 
+import com.luinwee.restaurant.dto.ProductCreateRequest;
 import com.luinwee.restaurant.dto.ProductDto;
 import com.luinwee.restaurant.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class ProductController {
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDto createProduct(@RequestBody ProductDto productDto){
+    public ProductDto createProduct(@RequestBody ProductCreateRequest productDto){
         return service.createProduct(productDto);
     }
     @PutMapping

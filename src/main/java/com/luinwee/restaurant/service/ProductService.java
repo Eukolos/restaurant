@@ -1,6 +1,8 @@
 package com.luinwee.restaurant.service;
 
+import com.luinwee.restaurant.dto.ProductCreateRequest;
 import com.luinwee.restaurant.dto.ProductDto;
+import com.luinwee.restaurant.dto.ProductRequest;
 import com.luinwee.restaurant.model.Product;
 import com.luinwee.restaurant.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -15,19 +17,24 @@ public class ProductService {
         this.repository = repository;
     }
 
-    public List<ProductDto> getProductList(){
+    public List<ProductDto> getProductList() {
         return ProductDto.toDtoList(repository.findAll());
     }
-    public ProductDto getProduct(Long productId){
+
+    public ProductDto getProduct(Long productId) {
         return ProductDto.toDto(repository.findById(productId).orElseThrow(null));
     }
-    protected Product product(Long productId){
-        return repository.findById(productId).orElseThrow(null);
+
+    protected Product product(ProductRequest product) {
+        decreaseQuantity(product);
+        return repository.findById(product.productId()).orElseThrow(null);
     }
-    public ProductDto createProduct(ProductDto productDto){
-        return ProductDto.toDto(repository.save(ProductDto.toModel(productDto)));
+
+    public ProductDto createProduct(ProductCreateRequest productDto) {
+        return ProductDto.toDto(repository.save(ProductCreateRequest.toModel(productDto)));
     }
-    public ProductDto updateProduct(ProductDto productDto){
+
+    public ProductDto updateProduct(ProductDto productDto) {
         Product product = repository.findById(productDto.id()).orElseThrow(null);
         return ProductDto.toDto(repository.save(
                 new Product(
@@ -35,11 +42,23 @@ public class ProductService {
                         productDto.name(),
                         productDto.price(),
                         productDto.cost(),
-                        productDto.category()
+                        productDto.category(),
+                        productDto.quantity()
                 )
         ));
     }
-    public void deleteProduct(Long productId){
+
+    public void decreaseQuantity(ProductRequest products) {
+
+        Product product = repository.findById(products.productId()).orElseThrow();
+        product.setQuantity(product.getQuantity() - products.amount());
+    }
+
+    public List<Product> createProducts(List<Product> products) {
+        return repository.saveAll(products);
+    }
+
+    public void deleteProduct(Long productId) {
         repository.deleteById(productId);
     }
 }
